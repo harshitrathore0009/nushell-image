@@ -38,18 +38,18 @@ $images | each { |img|
     print $"(ansi cyan)Building image for version:(ansi reset) ($img.version)"
     (docker build .
         -f ./Containerfile
-        ...($img.tags | each { |tag| ["-t", $"($env.REGISTRY)/nushell-container:($tag)"] } | flatten) # generate and spread list of tags
+        ...($img.tags | each { |tag| ["-t", $"($env.REGISTRY)/nushell-image:($tag)"] } | flatten) # generate and spread list of tags
         --build-arg $"URL=($img.url)")
 
 }
 
 print $"(ansi cyan)Pushing images:(ansi reset)"
 let digest = (
-    docker push --all-tags $"($env.REGISTRY)/nushell-container"
+    docker push --all-tags $"($env.REGISTRY)/nushell-image"
         | split row "\n"  | last | split row " " | get 2 # parse push output to get digest for signing
 )
 
-print $"(ansi cyan)Signing image:(ansi reset) ($env.REGISTRY)/nushell-container@($digest)"
-cosign sign -y --key env://COSIGN_PRIVATE_KEY $"($env.REGISTRY)/nushell-container@($digest)"
+print $"(ansi cyan)Signing image:(ansi reset) ($env.REGISTRY)/nushell-image@($digest)"
+cosign sign -y --key env://COSIGN_PRIVATE_KEY $"($env.REGISTRY)/nushell-image@($digest)"
 
 print $"(ansi green_bold)DONE!(ansi reset)"
