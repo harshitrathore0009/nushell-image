@@ -6,7 +6,7 @@ print $"(ansi green_bold)Gathering images"
 let images = http get https://api.github.com/repos/nushell/nushell/releases | enumerate | each { |arrayEl|
     let release = $arrayEl.item
 
-    let url = ($release.assets | where name ends-with "x86_64-unknown-linux-gnu.tar.gz").browser_download_url
+    let url = ($release.assets | where name ends-with "x86_64-unknown-linux-gnu.tar.gz").browser_download_url.0
     let version = $release.name
 
     let tags = (
