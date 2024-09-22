@@ -1,4 +1,8 @@
-FROM alpine:3.20 as build
+FROM ubuntu:20.04 as cached
+
+RUN apt-get update && apt-get install -y wget
+
+FROM cached as build
 
 ARG URL=https://github.com/nushell/nushell/releases/download/0.98.0/nu-0.98.0-x86_64-unknown-linux-gnu.tar.gz
 
