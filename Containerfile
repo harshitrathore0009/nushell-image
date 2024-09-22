@@ -1,4 +1,4 @@
-FROM alpine as build
+FROM alpine:3.20 as build
 
 ARG URL=https://github.com/nushell/nushell/releases/download/0.98.0/nu-0.98.0-x86_64-unknown-linux-gnu.tar.gz
 

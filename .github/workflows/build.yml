@@ -1,4 +1,4 @@
-name: build-individual
+name: build-nushell-images
 on:
   push:
     paths-ignore: # don't rebuild if only documentation has changed
