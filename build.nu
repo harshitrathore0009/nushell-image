@@ -3,6 +3,8 @@
 
 print $"(ansi green_bold)Gathering images"
 
+const DEFAULT_VERSION = "0.99.1"
+
 let images = http get https://api.github.com/repos/nushell/nushell/releases | enumerate | each { |arrayEl|
     let release = $arrayEl.item
 
@@ -11,8 +13,12 @@ let images = http get https://api.github.com/repos/nushell/nushell/releases | en
 
     let tags = (
         if ($env.GH_EVENT_NAME != "pull_request" and $env.GH_BRANCH == "main") {
-            if ($arrayEl.index == 0) {
+            if ($arrayEl.index == 0 and $version == $DEFAULT_VERSION) {
+                ["latest", "default", $version]
+            } else if ($arrayEl.index == 0) {
                 ["latest", $version]
+            } else if ($version == $DEFAULT_VERSION) {
+                ["default", $version]
             } else {
                 [$version]
             }
