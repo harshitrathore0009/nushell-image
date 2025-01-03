@@ -1,6 +1,9 @@
 #!/usr/bin/env nu
 # build separate images for each module in the repo
 
+# version to be tagged with `default` and used by BlueBuild modules
+const DEFAULT_VERSION = "0.99.1"
+
 print $"(ansi green_bold)Gathering images"
 
 let images = http get https://api.github.com/repos/nushell/nushell/releases | enumerate | each { |arrayEl|
@@ -11,8 +14,12 @@ let images = http get https://api.github.com/repos/nushell/nushell/releases | en
 
     let tags = (
         if ($env.GH_EVENT_NAME != "pull_request" and $env.GH_BRANCH == "main") {
-            if ($arrayEl.index == 0) {
+            if ($arrayEl.index == 0 and $version == $DEFAULT_VERSION) {
+                ["latest", "default", $version]
+            } else if ($arrayEl.index == 0) {
                 ["latest", $version]
+            } else if ($version == $DEFAULT_VERSION) {
+                ["default", $version]
             } else {
                 [$version]
             }
